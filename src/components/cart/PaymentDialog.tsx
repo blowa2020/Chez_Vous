@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {
   Dialog,
@@ -27,6 +26,14 @@ interface PaymentDialogProps {
   isSubmitting?: boolean;
 }
 
+const paymentMethods = [
+  { value: 'especes', label: 'Espèces' },
+  { value: 'carte', label: 'Carte bancaire' },
+  { value: 'mobile_money', label: 'Mobile Money' },
+  { value: 'orange_money', label: 'Orange Money' },
+  { value: 'wave', label: 'Wave' },
+];
+
 export const PaymentDialog = ({
   open,
   onOpenChange,
@@ -44,27 +51,39 @@ export const PaymentDialog = ({
             Veuillez sélectionner votre méthode de paiement préférée
           </DialogDescription>
         </DialogHeader>
-        
+
         <div className="py-4">
-          <Select value={methodePaiement} onValueChange={onMethodePaiementChange}>
+          <Select
+            value={methodePaiement}
+            onValueChange={(value) => {
+              if (value) onMethodePaiementChange(value);
+            }}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Sélectionner une méthode de paiement" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="especes">Espèces</SelectItem>
-              <SelectItem value="carte">Carte bancaire</SelectItem>
-              <SelectItem value="mobile_money">Mobile Money</SelectItem>
-              <SelectItem value="orange_money">Orange Money</SelectItem>
-              <SelectItem value="wave">Wave</SelectItem>
+              {paymentMethods.map((method) => (
+                <SelectItem key={method.value} value={method.value}>
+                  {method.label}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
-        
+
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
+          <Button
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            disabled={isSubmitting}
+          >
             Annuler
           </Button>
-          <Button onClick={onConfirm} disabled={isSubmitting || !methodePaiement}>
+          <Button
+            onClick={onConfirm}
+            disabled={isSubmitting || !methodePaiement}
+          >
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
